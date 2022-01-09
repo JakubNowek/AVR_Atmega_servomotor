@@ -20,7 +20,7 @@
 #define sbi(reg, bit) reg |= (_BV(bit))
 #endif
 
-
+bool do_Menu = true;
 
 void getKey(int *wybor)
 {
@@ -62,7 +62,10 @@ void getKey(int *wybor)
             }
             if (i == 1) // nr 5 na klawiaturze
             {
-                LCD_HD44780::showNumber(5);
+                //LCD_HD44780::showNumber(5);
+            	do_Menu = false;
+            	LCD_HD44780::clear();
+
             }
             if (i == 2) // nr 6 na klawiaturze
             {
@@ -121,14 +124,14 @@ void getKey(int *wybor)
     }
 }
 
-void Menu(int *choice, char *opcje[]){
+void Menu(int *choice, char *opcje1[]){
 
 	LCD_HD44780::clear();
 	getKey(choice); //wybieranie opcji(3 mozliwosci: pokaz nastepna opcje, pokaz poprzednia opcje, wybierz opcje)
 	LCD_HD44780::writeText("MENU");
 	//LCD_HD44780::showNumber(*choice); // do debuggowania w razie problemow
 	LCD_HD44780::goTo(0,1);
-	LCD_HD44780::writeText(opcje[*choice]); //tu wypisywana jest aktualnie przegl¹dana opcja
+	LCD_HD44780::writeText(opcje1[*choice]); //tu wypisywana jest aktualnie przegl¹dana opcja
 
 }
 
@@ -136,13 +139,19 @@ void Menu(int *choice, char *opcje[]){
 int main()
 {
 	int wybor=0;
-	char *opcje[]= {"Opcja 0","Opcja 1","Opcja 2","Opcja 3"}; //tablica opcji
+	char *opcje1[]= { "Opcja 0 ",
+					 "Opcja 1 ",
+					 "Opcja 2 ",
+					 "Opcja 3 "
+	}; //tablica opcji
+	char *
+
     DDRC = 0b00001111;
     PORTC = 0xff;
     LCD_HD44780::init();
     while (1){
-
-    	Menu(&wybor,opcje);
+    	if(do_Menu == true)
+    	Menu(&wybor,opcje1);
     	_delay_ms(200);
     }
 }
