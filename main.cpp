@@ -1,15 +1,16 @@
 #include <avr/io.h>
-#include <util/delay.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
-#include<avr/interrupt.h>
-
+#include <util/delay.h>
 #include "LCD_HD44780.h"
 
 #define bit_is_set(sfr, bit) (_SFR_BYTE(sfr) & _BV(bit))
 #define bit_is_clear(sfr, bit) (!(_SFR_BYTE(sfr) & _BV(bit)))
+
+
+#define ILE_OPCJI 4
 
 #ifndef cbi
 #define cbi(reg, bit) reg &= ~(_BV(bit))
@@ -20,7 +21,8 @@
 #endif
 
 
-void getKey(int *choice)
+
+void getKey(int *wybor)
 {
     for (int i = 0; i < 4; i++)
     {
@@ -34,7 +36,9 @@ void getKey(int *choice)
             }
             if (i == 1) // nr 8 na klawiaturze
             {
-                LCD_HD44780::showNumber(8);
+                //LCD_HD44780::showNumber(8);
+            	if(--(*wybor)<0)
+            		(*wybor) = ILE_OPCJI-1;
             }
             if (i == 2) // nr 9 na klawiaturze
             {
@@ -78,7 +82,10 @@ void getKey(int *choice)
             }
             if (i == 1) // nr 2 na klawiaturze
             {
-                LCD_HD44780::showNumber(2);
+                //LCD_HD44780::showNumber(2);
+            	if(++(*wybor)>(ILE_OPCJI-1))
+            		(*wybor) = 0;
+
 
             }
             if (i == 2) // nr 3 na klawiaturze
@@ -114,35 +121,28 @@ void getKey(int *choice)
     }
 }
 
-void Menu(){
-	int wybor;
-	char *opcje[] = {"aaa","chuj","siusiaczki",""}; //tablica opcji
+void Menu(int *choice, char *opcje[]){
 
 	LCD_HD44780::clear();
+	getKey(choice); //wybieranie opcji(3 mozliwosci: pokaz nastepna opcje, pokaz poprzednia opcje, wybierz opcje)
 	LCD_HD44780::writeText("MENU");
+	//LCD_HD44780::showNumber(*choice); // do debuggowania w razie problemow
 	LCD_HD44780::goTo(0,1);
-	getKey(&wybor); //wybieranie opcji(3 mozliwosci: pokaz nastepna opcje, pokaz poprzednia opcje, wybierz opcje)
-	LCD_HD44780::writeText(opcje[wybor]); //tu wypisywana jest aktualnie przegl¹dana opcja
+	LCD_HD44780::writeText(opcje[*choice]); //tu wypisywana jest aktualnie przegl¹dana opcja
 
-}
-
-ISR (TIMER1_OVF_vect)    // Timer1 ISR
-{
-	TCNT1 = 64755;   // for 1 sec at 8 MHz
-	Menu();
 }
 
 
 int main()
 {
+	int wybor=0;
+	char *opcje[]= {"Opcja 0","Opcja 1","Opcja 2","Opcja 3"}; //tablica opcji
     DDRC = 0b00001111;
     PORTC = 0xff;
     LCD_HD44780::init();
-    char str[] = "";
-	TCCR1A = 0x00;
-	TCCR1B = (1<<CS10) | (1<<CS12);;  // Timer mode with 1024 prescler
-	TIMSK = (1 << TOIE1) ;   // Enable timer1 overflow interrupt(TOIE1)
-	sei();        // Enable global interrupts by setting global interrupt enable bit in SREG
-    while (1)
-    {}
+    while (1){
+
+    	Menu(&wybor,opcje);
+    	_delay_ms(200);
+    }
 }
