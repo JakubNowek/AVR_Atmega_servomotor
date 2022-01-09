@@ -154,7 +154,7 @@ void Spin(){ // Sta³e obracanie serwa
 }
 
 void Exit(){ // Wy³¹czenie serwa i ekranu
-
+	LCD_HD44780::writeCommand(HD44780_DISPLAY_ONOFF | HD44780_DISPLAY_OFF); // wy³¹czenie ekranu
 }
 
 void Menu(int *choice,int *page ,char *opcje1[]){
@@ -214,6 +214,7 @@ int main()
     		    case 2: Spin();
     		        break;
     		    case 3: Exit();
+    		    return 0;
     		        break;
     		    default:
     		    	break;
