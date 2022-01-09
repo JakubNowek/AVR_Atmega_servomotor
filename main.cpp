@@ -20,23 +20,23 @@
 #endif
 
 
-void getKey()
+void getKey(int *choice)
 {
     for (int i = 0; i < 4; i++)
     {
         sbi(PORTC, i);
         if (bit_is_set(PINC, 4))
         {
-            cbi(PORTC, i);
+            cbi(PORTC, i); // nr 7 na klawiaturze
             if (i == 0)
             {
                 LCD_HD44780::showNumber(7);
             }
-            if (i == 1)
+            if (i == 1) // nr 8 na klawiaturze
             {
                 LCD_HD44780::showNumber(8);
             }
-            if (i == 2)
+            if (i == 2) // nr 9 na klawiaturze
             {
                 {
                     LCD_HD44780::showNumber(9);
@@ -52,19 +52,19 @@ void getKey()
         else if (bit_is_set(PINC, 5))
         {
             cbi(PORTC, i);
-            if (i == 0)
+            if (i == 0) // nr 4 na klawiaturze
             {
                 LCD_HD44780::showNumber(4);
             }
-            if (i == 1)
+            if (i == 1) // nr 5 na klawiaturze
             {
                 LCD_HD44780::showNumber(5);
             }
-            if (i == 2)
+            if (i == 2) // nr 6 na klawiaturze
             {
                 LCD_HD44780::showNumber(6);
             }
-            if (i == 3)
+            if (i == 3)  // * na klawiaturze
             {
                 LCD_HD44780::writeText("*");
             }
@@ -72,26 +72,27 @@ void getKey()
         else if (bit_is_set(PINC, 6))
         {
             cbi(PORTC, i);
-            if (i == 0)
+            if (i == 0) // nr 1 na klawiaturze
             {
                 LCD_HD44780::showNumber(1);
             }
-            if (i == 1)
+            if (i == 1) // nr 2 na klawiaturze
             {
                 LCD_HD44780::showNumber(2);
+
             }
-            if (i == 2)
+            if (i == 2) // nr 3 na klawiaturze
             {
                 LCD_HD44780::showNumber(3);
             }
-            if (i == 3)
+            if (i == 3) // nr 4 na klawiaturze
             {
                 LCD_HD44780::writeText("-");
             }
         }
         else if (bit_is_set(PINC, 7))
         {
-            if (i == 0)
+            if (i == 0) // nr 0 na klawiaturze
             {
                 LCD_HD44780::showNumber(0);
             }
@@ -114,11 +115,15 @@ void getKey()
 }
 
 void Menu(){
+	int wybor;
+	char *opcje[] = {"aaa","chuj","siusiaczki",""}; //tablica opcji
+
 	LCD_HD44780::clear();
 	LCD_HD44780::writeText("MENU");
 	LCD_HD44780::goTo(0,1);
-	getKey(); //wybieranie opcji(3 mozliwosci: pokaz nastepna opcje, pokaz poprzednia opcje, wybierz opcje)
-	//LCD_HD44780::writeText();
+	getKey(&wybor); //wybieranie opcji(3 mozliwosci: pokaz nastepna opcje, pokaz poprzednia opcje, wybierz opcje)
+	LCD_HD44780::writeText(opcje[wybor]); //tu wypisywana jest aktualnie przegl¹dana opcja
+
 }
 
 ISR (TIMER1_OVF_vect)    // Timer1 ISR
@@ -130,8 +135,6 @@ ISR (TIMER1_OVF_vect)    // Timer1 ISR
 
 int main()
 {
-
-
     DDRC = 0b00001111;
     PORTC = 0xff;
     LCD_HD44780::init();
