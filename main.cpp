@@ -21,8 +21,10 @@
 #endif
 
 bool do_Menu = true;
+//bool do_Func = false;
+bool click = false;
 
-void getKey(int *wybor)
+void getKey(int *choice)
 {
     for (int i = 0; i < 4; i++)
     {
@@ -32,18 +34,20 @@ void getKey(int *wybor)
             cbi(PORTC, i); // nr 7 na klawiaturze
             if (i == 0)
             {
-                LCD_HD44780::showNumber(7);
+                //LCD_HD44780::showNumber(7);
+            	*choice = 7;
             }
             if (i == 1) // nr 8 na klawiaturze
             {
                 //LCD_HD44780::showNumber(8);
-            	if(--(*wybor)<0)
-            		(*wybor) = ILE_OPCJI-1;
+            	*choice = 8;
+
             }
             if (i == 2) // nr 9 na klawiaturze
             {
                 {
-                    LCD_HD44780::showNumber(9);
+                    //LCD_HD44780::showNumber(9);
+                	*choice = 9;
                 }
             }
             if (i == 3)
@@ -58,18 +62,20 @@ void getKey(int *wybor)
             cbi(PORTC, i);
             if (i == 0) // nr 4 na klawiaturze
             {
-                LCD_HD44780::showNumber(4);
+                //LCD_HD44780::showNumber(4);
+            	*choice = 4;
             }
             if (i == 1) // nr 5 na klawiaturze
             {
                 //LCD_HD44780::showNumber(5);
-            	do_Menu = false;
-            	LCD_HD44780::clear();
+            	//LCD_HD44780::clear();
+            	*choice = 5;
 
             }
             if (i == 2) // nr 6 na klawiaturze
             {
-                LCD_HD44780::showNumber(6);
+                //LCD_HD44780::showNumber(6);
+            	*choice = 6;
             }
             if (i == 3)  // * na klawiaturze
             {
@@ -81,30 +87,31 @@ void getKey(int *wybor)
             cbi(PORTC, i);
             if (i == 0) // nr 1 na klawiaturze
             {
-                LCD_HD44780::showNumber(1);
+                //LCD_HD44780::showNumber(1);
+            	*choice = 1;
             }
             if (i == 1) // nr 2 na klawiaturze
             {
                 //LCD_HD44780::showNumber(2);
-            	if(++(*wybor)>(ILE_OPCJI-1))
-            		(*wybor) = 0;
-
+            	*choice = 2;
 
             }
             if (i == 2) // nr 3 na klawiaturze
             {
-                LCD_HD44780::showNumber(3);
+                //LCD_HD44780::showNumber(3);
+            	*choice = 3;
             }
             if (i == 3) // nr 4 na klawiaturze
             {
-                LCD_HD44780::writeText("-");
+                //LCD_HD44780::writeText("-");
             }
         }
         else if (bit_is_set(PINC, 7))
         {
             if (i == 0) // nr 0 na klawiaturze
             {
-                LCD_HD44780::showNumber(0);
+                //LCD_HD44780::showNumber(0);
+            	*choice = 0;
             }
             if (i == 1)
             {
@@ -124,34 +131,96 @@ void getKey(int *wybor)
     }
 }
 
-void Menu(int *choice, char *opcje1[]){
+void Bounce(){ //  "Odbijanie" serwa
+	LCD_HD44780::clear();
+	LCD_HD44780::writeText("Bounce, bounce");
+	LCD_HD44780::goTo(0,1);
+	//LCD_HD44780::clear();
+}
+
+void Rotate(){ // Obrót serwa o dowolny k¹t
+	LCD_HD44780::clear();
+	LCD_HD44780::writeText("What's the angle");
+	LCD_HD44780::goTo(0,1);
+	//LCD_HD44780::clear();
+}
+
+void Spin(){ // Sta³e obracanie serwa
+	LCD_HD44780::clear();
+	LCD_HD44780::writeText("You spin me");
+	LCD_HD44780::goTo(0,1);
+	//LCD_HD44780::clear();
+	LCD_HD44780::writeText("Right round");
+}
+
+void Exit(){ // Wy³¹czenie serwa i ekranu
+
+}
+
+void Menu(int *choice,int *page ,char *opcje1[]){
 
 	LCD_HD44780::clear();
+
 	getKey(choice); //wybieranie opcji(3 mozliwosci: pokaz nastepna opcje, pokaz poprzednia opcje, wybierz opcje)
+	//LCD_HD44780::showNumber(*choice); // do debuggowania w razie problemow
+
+	if(*choice == 8){
+		if(--(*page)<0)
+			(*page) = ILE_OPCJI-1;
+	}
+	if(*choice == 2){
+		if(++(*page)>(ILE_OPCJI-1))
+			(*page) = 0;
+	}
+
 	LCD_HD44780::writeText("MENU");
 	//LCD_HD44780::showNumber(*choice); // do debuggowania w razie problemow
 	LCD_HD44780::goTo(0,1);
-	LCD_HD44780::writeText(opcje1[*choice]); //tu wypisywana jest aktualnie przegl¹dana opcja
+	LCD_HD44780::writeText(opcje1[*page]); //tu wypisywana jest aktualnie przegl¹dana opcja
 
+	if(*choice == 5){
+		//do_Func = true;
+		do_Menu = false;
+	}
+
+	*choice = 0;
 }
 
 
 int main()
 {
-	int wybor=0;
-	char *opcje1[]= { "Opcja 0 ",
-					 "Opcja 1 ",
-					 "Opcja 2 ",
-					 "Opcja 3 "
+	int wybor=0, strona = 0;
+	char *opcje1[]= {"0 - Motor Bounce ",
+					 "1 - Rotate ",
+					 "2 - Spin ",
+					 "3 - Exit "
 	}; //tablica opcji
-	char *
 
     DDRC = 0b00001111;
     PORTC = 0xff;
     LCD_HD44780::init();
     while (1){
-    	if(do_Menu == true)
-    	Menu(&wybor,opcje1);
+
+    	if(do_Menu == true /*&& do_Func == false*/)
+    	Menu(&wybor,&strona,opcje1);
+    	else{
+    	//if(do_Func == true && do_Menu == false){
+    		switch (strona)
+    		{
+    		    case 0: Bounce();
+    		        break;
+    		    case 1: Rotate();
+    		        break;
+    		    case 2: Spin();
+    		        break;
+    		    case 3: Exit();
+    		        break;
+    		    default:
+    		    	break;
+    		}
+    	}
     	_delay_ms(200);
+    	wybor = 0;
+
     }
 }
