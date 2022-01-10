@@ -140,8 +140,8 @@ void Bounce(){ //  "Odbijanie" serwa
 	//LCD_HD44780::clear();
 }
 
-void Rotate(int *choice, int *kat){ // Obrót serwa o dowolny k¹t
-	//int rank = 1;
+void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny k¹t
+	int rank = 0;
 	int angle = -1;
 	int pom = angle;
 	LCD_HD44780::clear();
@@ -157,10 +157,15 @@ void Rotate(int *choice, int *kat){ // Obrót serwa o dowolny k¹t
 		//angleIn = true;
 	}
 	if(angle!=pom){
-	*kat += angle;
+		//rank++;
+		char c = (char)angle;
+		strncat(kat, &c, 1);
+		//*kat += angle*10*rank;
+
 	}
+	LCD_HD44780::writeText(kat);
 	LCD_HD44780::showNumber(*kat);
-	LCD_HD44780::showNumber(angle);
+	//LCD_HD44780::showNumber(angle);
 	_delay_ms(200);
 }
 
@@ -209,7 +214,7 @@ void Menu(int *choice,int *page ,char *opcje1[]){
 
 int main()
 {
-	int wybor=0, strona = 0; int kat=0;
+	int wybor=0, strona = 0; char kat[]="";
 	char *opcje1[]= {"0 - Motor Bounce ",
 					 "1 - Rotate ",
 					 "2 - Spin ",
@@ -228,7 +233,7 @@ int main()
     		{
     		    case 0: Bounce();
     		        break;
-    		    case 1: Rotate(&wybor,&kat);
+    		    case 1: Rotate(&wybor,kat);
     		    		//if(wybor == 11)//{
     		    			//do_Menu = true;
     		    			break;
