@@ -141,34 +141,28 @@ void Bounce(){ //  "Odbijanie" serwa
 }
 
 void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny k¹t
-	int rank = 0;
+	char c;
 	int angle = -1;
 	int pom = angle;
 	LCD_HD44780::clear();
 	LCD_HD44780::writeText("What's the angle: ");
 	LCD_HD44780::goTo(0,1);
 	getKey(choice);
-	if((*choice)!=11/* && angleIn == false*/)
+	if((*choice)!=11)
 	{
-
 		angle=(*choice);
-		//rank++;
-		//_delay_ms(200);
-		//angleIn = true;
 	}
 	if(angle!=pom){
-		//rank++;
-		char c = (char)angle;
+		c = angle+'0';
 		strncat(kat, &c, 1);
-		//*kat += angle*10*rank;
-
 	}
-	LCD_HD44780::writeText(kat);
-	LCD_HD44780::showNumber(*kat);
-	//LCD_HD44780::showNumber(angle);
+	LCD_HD44780::showNumber(atoi(kat));
+	/*tutaj servo wchodzi*/
+	*choice = -1;
 	_delay_ms(200);
 }
 
+/*chyba wywalic*/
 void Spin(){ // Sta³e obracanie serwa
 	LCD_HD44780::clear();
 	LCD_HD44780::writeText("You spin me");
@@ -207,7 +201,7 @@ void Menu(int *choice,int *page ,char *opcje1[]){
 		do_Menu = false;
 	}
 
-	*choice = 0;
+	*choice = -1;
 	_delay_ms(200);
 }
 
@@ -234,8 +228,6 @@ int main()
     		    case 0: Bounce();
     		        break;
     		    case 1: Rotate(&wybor,kat);
-    		    		//if(wybor == 11)//{
-    		    			//do_Menu = true;
     		    			break;
     		    		//}
     		        break;
@@ -249,7 +241,7 @@ int main()
     		}
     	}
     	//_delay_ms(200);
-    	wybor = 0;
+    	//wybor = 0;
     	//kat = 0;
 
     }
