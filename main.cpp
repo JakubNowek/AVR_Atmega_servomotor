@@ -5,6 +5,7 @@
 #include <limits.h>
 #include <util/delay.h>
 #include "LCD_HD44780.h"
+#include <math.h>
 
 #define bit_is_set(sfr, bit) (_SFR_BYTE(sfr) & _BV(bit))
 #define bit_is_clear(sfr, bit) (!(_SFR_BYTE(sfr) & _BV(bit)))
@@ -21,8 +22,7 @@
 #endif
 
 bool do_Menu = true;
-//bool do_Func = false;
-bool click = false;
+bool angleIn = false;
 
 void getKey(int *choice)
 {
@@ -111,15 +111,17 @@ void getKey(int *choice)
             if (i == 0) // nr 0 na klawiaturze
             {
                 //LCD_HD44780::showNumber(0);
+
             	*choice = 0;
             }
             if (i == 1)
             {
-                LCD_HD44780::clear();
+                //LCD_HD44780::clear();
             }
             if (i == 2)
             {
 
+            	*choice = 11;
             }
 
             if (i == 3)
@@ -138,11 +140,28 @@ void Bounce(){ //  "Odbijanie" serwa
 	//LCD_HD44780::clear();
 }
 
-void Rotate(){ // Obrót serwa o dowolny k¹t
+void Rotate(int *choice, int *kat){ // Obrót serwa o dowolny k¹t
+	//int rank = 1;
+	int angle = -1;
+	int pom = angle;
 	LCD_HD44780::clear();
-	LCD_HD44780::writeText("What's the angle");
+	LCD_HD44780::writeText("What's the angle: ");
 	LCD_HD44780::goTo(0,1);
-	//LCD_HD44780::clear();
+	getKey(choice);
+	if((*choice)!=11/* && angleIn == false*/)
+	{
+
+		angle=(*choice);
+		//rank++;
+		//_delay_ms(200);
+		//angleIn = true;
+	}
+	if(angle!=pom){
+	*kat += angle;
+	}
+	LCD_HD44780::showNumber(*kat);
+	LCD_HD44780::showNumber(angle);
+	_delay_ms(200);
 }
 
 void Spin(){ // Sta³e obracanie serwa
@@ -184,12 +203,13 @@ void Menu(int *choice,int *page ,char *opcje1[]){
 	}
 
 	*choice = 0;
+	_delay_ms(200);
 }
 
 
 int main()
 {
-	int wybor=0, strona = 0;
+	int wybor=0, strona = 0; int kat=0;
 	char *opcje1[]= {"0 - Motor Bounce ",
 					 "1 - Rotate ",
 					 "2 - Spin ",
@@ -201,15 +221,18 @@ int main()
     LCD_HD44780::init();
     while (1){
 
-    	if(do_Menu == true /*&& do_Func == false*/)
+    	if(do_Menu == true)
     	Menu(&wybor,&strona,opcje1);
     	else{
-    	//if(do_Func == true && do_Menu == false){
     		switch (strona)
     		{
     		    case 0: Bounce();
     		        break;
-    		    case 1: Rotate();
+    		    case 1: Rotate(&wybor,&kat);
+    		    		//if(wybor == 11)//{
+    		    			//do_Menu = true;
+    		    			break;
+    		    		//}
     		        break;
     		    case 2: Spin();
     		        break;
@@ -220,8 +243,9 @@ int main()
     		    	break;
     		}
     	}
-    	_delay_ms(200);
+    	//_delay_ms(200);
     	wybor = 0;
+    	//kat = 0;
 
     }
 }
