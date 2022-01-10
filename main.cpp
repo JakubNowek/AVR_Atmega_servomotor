@@ -22,7 +22,7 @@
 #endif
 
 bool do_Menu = true;
-bool angleIn = false;
+bool angleOk = false;
 
 void getKey(int *choice)
 {
@@ -144,21 +144,35 @@ void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny k¹t
 	char c;
 	int angle = -1;
 	int pom = angle;
+	int rot_angle;
 	LCD_HD44780::clear();
-	LCD_HD44780::writeText("What's the angle: ");
-	LCD_HD44780::goTo(0,1);
+
 	getKey(choice);
-	if((*choice)!=11)
+	if((*choice)!=11 && angleOk == false)
 	{
+		LCD_HD44780::writeText("What's the angle: ");
+		LCD_HD44780::goTo(0,1);
 		angle=(*choice);
+		if(angle!=pom){
+			c = angle+'0';
+			strncat(kat, &c, 1);
+		}
+		LCD_HD44780::showNumber(atoi(kat));
 	}
-	if(angle!=pom){
-		c = angle+'0';
-		strncat(kat, &c, 1);
+	else{
+		angleOk = true;
+		rot_angle = atoi(kat);
 	}
-	LCD_HD44780::showNumber(atoi(kat));
-	/*tutaj servo wchodzi*/
-	*choice = -1;
+
+	if(angleOk == true) //wartoœc choice==11 oznacza, ¿e akceptujemy wybrany kat
+	{
+		LCD_HD44780::writeText("Angle is: ");
+		LCD_HD44780::showNumber(rot_angle);
+		LCD_HD44780::goTo(0,1);
+		LCD_HD44780::writeText("Rotating...");
+		/*tutaj servo wchodzi*/
+
+	}
 	_delay_ms(200);
 }
 
@@ -201,7 +215,6 @@ void Menu(int *choice,int *page ,char *opcje1[]){
 		do_Menu = false;
 	}
 
-	*choice = -1;
 	_delay_ms(200);
 }
 
@@ -228,9 +241,7 @@ int main()
     		    case 0: Bounce();
     		        break;
     		    case 1: Rotate(&wybor,kat);
-    		    			break;
-    		    		//}
-    		        break;
+    		    	break;
     		    case 2: Spin();
     		        break;
     		    case 3: Exit();
@@ -243,6 +254,7 @@ int main()
     	//_delay_ms(200);
     	//wybor = 0;
     	//kat = 0;
+    	wybor = -1;
 
     }
 }

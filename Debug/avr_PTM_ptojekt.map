@@ -63,7 +63,6 @@ Discarded input sections
                 0x00000000        0x0 ./LCD_HD44780.o
  .text          0x00000000        0x0 ./main.o
  .bss           0x00000000        0x0 ./main.o
- .bss.angleIn   0x00000000        0x0 ./main.o
  .text          0x00000000        0x0 e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
  .data          0x00000000        0x0 e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
  .bss           0x00000000        0x0 e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
@@ -246,7 +245,7 @@ LOAD e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000     0x2304
+.text           0x00000000     0x2344
  *(.vectors)
  .vectors       0x00000000       0x54 e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm32.o
                 0x00000000                __vectors
@@ -388,49 +387,49 @@ LOAD e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
                 0x00001878       0x12 ./main.o
                 0x00001878                Exit()
  .text._Z4MenuPiS_PPc
-                0x0000188a      0x1ec ./main.o
+                0x0000188a      0x1e0 ./main.o
                 0x0000188a                Menu(int*, int*, char**)
  .text._Z6RotatePiPc
-                0x00001a76      0x196 ./main.o
-                0x00001a76                Rotate(int*, char*)
- .text.main     0x00001c0c       0xfe ./main.o
-                0x00001c0c                main
- .text.libgcc   0x00001d0a       0x38 e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_prologue.o)
-                0x00001d0a                __prologue_saves__
- .text.libgcc   0x00001d42       0x36 e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_epilogue.o)
-                0x00001d42                __epilogue_restores__
+                0x00001a6a      0x1d8 ./main.o
+                0x00001a6a                Rotate(int*, char*)
+ .text.main     0x00001c42      0x108 ./main.o
+                0x00001c42                main
+ .text.libgcc   0x00001d4a       0x38 e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_prologue.o)
+                0x00001d4a                __prologue_saves__
+ .text.libgcc   0x00001d82       0x36 e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_epilogue.o)
+                0x00001d82                __epilogue_restores__
  .text.avr-libc
-                0x00001d78       0x3a e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(atoi.o)
-                0x00001d78                atoi
+                0x00001db8       0x3a e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(atoi.o)
+                0x00001db8                atoi
  .text.avr-libc
-                0x00001db2       0x20 e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(strncat.o)
-                0x00001db2                strncat
+                0x00001df2       0x20 e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(strncat.o)
+                0x00001df2                strncat
  .text.avr-libc
-                0x00001dd2       0x10 e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(mul10.o)
-                0x00001dd2                __mulhi_const_10
+                0x00001e12       0x10 e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(mul10.o)
+                0x00001e12                __mulhi_const_10
  .text.avr-libc
-                0x00001de2       0x42 e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(sprintf.o)
-                0x00001de2                sprintf
+                0x00001e22       0x42 e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(sprintf.o)
+                0x00001e22                sprintf
  .text.avr-libc
-                0x00001e24      0x39c e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(vfprintf_std.o)
-                0x00001e24                vfprintf
+                0x00001e64      0x39c e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(vfprintf_std.o)
+                0x00001e64                vfprintf
  .text.avr-libc
-                0x000021c0       0x16 e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(strnlen_P.o)
-                0x000021c0                strnlen_P
+                0x00002200       0x16 e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(strnlen_P.o)
+                0x00002200                strnlen_P
  .text.avr-libc
-                0x000021d6       0x16 e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(strnlen.o)
-                0x000021d6                strnlen
+                0x00002216       0x16 e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(strnlen.o)
+                0x00002216                strnlen
  .text.avr-libc
-                0x000021ec       0x58 e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(fputc.o)
-                0x000021ec                fputc
+                0x0000222c       0x58 e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(fputc.o)
+                0x0000222c                fputc
  .text.avr-libc
-                0x00002244       0xbc e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(ultoa_invert.o)
-                0x00002244                __ultoa_invert
-                0x00002300                . = ALIGN (0x2)
+                0x00002284       0xbc e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(ultoa_invert.o)
+                0x00002284                __ultoa_invert
+                0x00002340                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00002300        0x0 e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
-                0x00002300                exit
-                0x00002300                _exit
+ .fini9         0x00002340        0x0 e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+                0x00002340                exit
+                0x00002340                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -449,44 +448,47 @@ LOAD e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00002300        0x4 e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .fini0         0x00002340        0x4 e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
  *(.fini0)
-                0x00002304                _etext = .
+                0x00002344                _etext = .
 
-.data           0x00800060       0x8c load address 0x00002304
+.data           0x00800060       0xa4 load address 0x00002344
                 0x00800060                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00800060        0x3 ./LCD_HD44780.o
- .data          0x00800063       0x78 ./main.o
- .data          0x008000db        0x8 e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_thenan_sf.o)
-                0x008000db                __thenan_sf
+ .data          0x00800063       0x8f ./main.o
+ .data          0x008000f2        0x8 e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_thenan_sf.o)
+                0x008000f2                __thenan_sf
  *(.data*)
- .data.do_Menu  0x008000e3        0x1 ./main.o
-                0x008000e3                do_Menu
+ .data.do_Menu  0x008000fa        0x1 ./main.o
+                0x008000fa                do_Menu
  *(.rodata)
  *(.rodata*)
- .rodata._ZZ4mainE3C.7
-                0x008000e4        0x8 ./main.o
+ .rodata._ZZ4mainE3C.9
+                0x008000fb        0x8 ./main.o
  *(.gnu.linkonce.d*)
-                0x008000ec                . = ALIGN (0x2)
-                0x008000ec                _edata = .
-                0x008000ec                PROVIDE (__data_end, .)
+                0x00800104                . = ALIGN (0x2)
+ *fill*         0x00800103        0x1 00
+                0x00800104                _edata = .
+                0x00800104                PROVIDE (__data_end, .)
 
-.bss            0x008000ec        0x0
-                0x008000ec                PROVIDE (__bss_start, .)
+.bss            0x00800104        0x1
+                0x00800104                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
+ .bss.angleOk   0x00800104        0x1 ./main.o
+                0x00800104                angleOk
  *(COMMON)
-                0x008000ec                PROVIDE (__bss_end, .)
-                0x00002304                __data_load_start = LOADADDR (.data)
-                0x00002390                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x00800105                PROVIDE (__bss_end, .)
+                0x00002344                __data_load_start = LOADADDR (.data)
+                0x000023e8                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x008000ec        0x0
-                0x008000ec                PROVIDE (__noinit_start, .)
+.noinit         0x00800105        0x0
+                0x00800105                PROVIDE (__noinit_start, .)
  *(.noinit*)
-                0x008000ec                PROVIDE (__noinit_end, .)
-                0x008000ec                _end = .
-                0x008000ec                PROVIDE (__heap_start, .)
+                0x00800105                PROVIDE (__noinit_end, .)
+                0x00800105                _end = .
+                0x00800105                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
  *(.eeprom*)
@@ -504,16 +506,16 @@ LOAD e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
 .signature
  *(.signature*)
 
-.stab           0x00000000     0x17b8
+.stab           0x00000000     0x1854
  *(.stab)
  .stab          0x00000000      0xc90 ./LCD_HD44780.o
                                 0xd74 (size before relaxing)
- .stab          0x00000c90      0xb28 ./main.o
-                                0xb34 (size before relaxing)
+ .stab          0x00000c90      0xbc4 ./main.o
+                                0xbd0 (size before relaxing)
 
-.stabstr        0x00000000      0xd4c
+.stabstr        0x00000000      0xd75
  *(.stabstr)
- .stabstr       0x00000000      0xd4c ./LCD_HD44780.o
+ .stabstr       0x00000000      0xd75 ./LCD_HD44780.o
 
 .stab.excl
  *(.stab.excl)
@@ -830,7 +832,7 @@ __vector_9                                        e:/instalki/winavr/bin/../lib/
 __vector_default                                  e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm32.o
 __vectors                                         e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm32.o
 _exit                                             e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
-angleIn                                           ./main.o
+angleOk                                           ./main.o
 atoi                                              e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(atoi.o)
                                                   ./main.o
 do_Menu                                           ./main.o
