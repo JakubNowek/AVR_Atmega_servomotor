@@ -59,10 +59,11 @@ void getKey(int *choice)
                 	*choice = 9;
                 }
             }
-            if (i == 3)
+            if (i == 3) //EXIT function
             {
                 {
-                    LCD_HD44780::writeText("/");
+                	*choice = -69;
+                    //LCD_HD44780::writeText("/");
                 }
             }
         }
@@ -155,7 +156,7 @@ void Bounce(){ //  "Odbijanie" serwa
 	LCD_HD44780::goTo(0,1);
 	//LCD_HD44780::clear();
 }
-
+int tikRemain=0;
 void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny k¹t
 	char c;
 	int angle = -1;
@@ -163,6 +164,7 @@ void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny k¹t
 	int rot_angle;
 	int rot_serv;
 	int current_angle;
+
 	LCD_HD44780::clear();
 
 	getKey(choice);
@@ -183,7 +185,7 @@ void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny k¹t
 		rot_angle = atoi(kat);
 		memset( kat, 0, sizeof(kat) );
 		*choice = -1;
-		angle = -1;
+		//angle = -1;
 
 	}
 
@@ -203,10 +205,11 @@ void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny k¹t
 			//LCD_HD44780::showNumber(SERV_MAX-current_angle);
 		//LCD_HD44780::showNumber(current_angle);
 		/* przeliczanie */
-
-		for(int i = current_angle;i<rot_serv+current_angle+1;i++){
+		tikRemain=rot_serv+1;
+		for(int i = current_angle;i<tikRemain+current_angle;i++){
 
 			OCR1A = i;
+			tikRemain--;
 			_delay_ms(200);
 			if(OCR1A >=SERV_MAX){
 				//LCD_HD44780::showNumber(rot_serv+OCR1A);
@@ -214,15 +217,12 @@ void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny k¹t
 				break;}
 		}
 		current_angle = OCR1A;
-
-			for(int i = 0; i<(rot_serv+current_angle-SERV_MAX-SERV_MIN-1);i++){
+			for(tikRemain; tikRemain>0;tikRemain--){
 				OCR1A=OCR1A-1;
 				_delay_ms(200);
-				LCD_HD44780::showNumber(OCR1A);
-
 			}
+			//LCD_HD44780::showNumber(tikRemain); //trouble shooting
 			//_delay_ms(5000);
-
 		angleOk = false;
 
 	}
@@ -300,6 +300,9 @@ int main()
     		    case 0: Bounce();
     		        break;
     		    case 1: Rotate(&wybor,kat);
+    		    		if(wybor == -69){
+    		    			do_Menu == true;
+    		    		}
     		    	break;
     		    case 2: Spin();
     		        break;
