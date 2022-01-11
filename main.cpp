@@ -190,7 +190,7 @@ void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny k¹t
 	if(angleOk == true) //wartośc choice==11 oznacza, ze akceptujemy wybrany kat
 	{
 
-		LCD_HD44780::writeText("Angle is: ");
+		LCD_HD44780::writeText("Rotating by: ");
 		LCD_HD44780::showNumber(rot_angle);
 		LCD_HD44780::goTo(0,1);
 		LCD_HD44780::writeText("Rotating...");
@@ -203,7 +203,7 @@ void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny k¹t
 			//LCD_HD44780::showNumber(SERV_MAX-current_angle);
 		//LCD_HD44780::showNumber(current_angle);
 		/* przeliczanie */
-		for(int i = current_angle;i<rot_serv+current_angle;i++){
+		for(int i = current_angle;i<rot_serv+current_angle+1;i++){
 			OCR1A = i;
 			_delay_ms(200);
 		}
