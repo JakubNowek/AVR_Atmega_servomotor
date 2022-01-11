@@ -200,14 +200,14 @@ void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny k¹t
 		LCD_HD44780::writeText("Rotating...");
 
 		/*tutaj servo wchodzi*/
-		rot_serv = num_round( (SERV_MAX-SERV_MIN)*rot_angle/180.0 ); //kat obrotu w jednostkach serwomechanizmu
+		rot_serv = num_round( (SERV_MAX-SERV_MIN)*rot_angle/180.0); //kat obrotu w jednostkach serwomechanizmu
 
 		current_angle = OCR1A; //zapisanie obecnego polozenia
 			//LCD_HD44780::writeText("/");
 			//LCD_HD44780::showNumber(SERV_MAX-current_angle);
 		//LCD_HD44780::showNumber(current_angle);
 		/* przeliczanie */
-		tikRemain+=rot_serv+1;
+		tikRemain+=rot_serv;
 		/*for(int i = current_angle;i<tikRemain+current_angle;i++){
 
 			OCR1A = i;
