@@ -196,25 +196,40 @@ void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny k¹t
 		LCD_HD44780::writeText("Rotating...");
 
 		/*tutaj servo wchodzi*/
-		rot_serv = num_round( (SERV_MAX-SERV_MIN)*rot_angle/180.0 );
+		rot_serv = num_round( (SERV_MAX-SERV_MIN)*rot_angle/180.0 ); //kat obrotu w jednostkach serwomechanizmu
 
 		current_angle = OCR1A; //zapisanie obecnego polozenia
 			//LCD_HD44780::writeText("/");
 			//LCD_HD44780::showNumber(SERV_MAX-current_angle);
 		//LCD_HD44780::showNumber(current_angle);
 		/* przeliczanie */
+
 		for(int i = current_angle;i<rot_serv+current_angle+1;i++){
+
 			OCR1A = i;
 			_delay_ms(200);
+			if(OCR1A >=SERV_MAX){
+				//LCD_HD44780::showNumber(rot_serv+OCR1A);
+				//_delay_ms(5000);
+				break;}
 		}
+		current_angle = OCR1A;
+
+			for(int i = 0; i<(rot_serv+current_angle-SERV_MAX-SERV_MIN-1);i++){
+				OCR1A=OCR1A-1;
+				_delay_ms(200);
+				LCD_HD44780::showNumber(OCR1A);
+
+			}
+			//_delay_ms(5000);
+
 		angleOk = false;
-
-
-
 
 	}
 	_delay_ms(200);
+
 }
+
 
 /*chyba wywalic*/
 void Spin(){ // Sta³e obracanie serwa
