@@ -157,6 +157,7 @@ void Bounce(){ //  "Odbijanie" serwa
 	//LCD_HD44780::clear();
 }
 int tikRemain=0;
+int step = 1;
 void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny k¹t
 	char c;
 	int angle = -1;
@@ -164,6 +165,7 @@ void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny k¹t
 	int rot_angle;
 	int rot_serv;
 	int current_angle;
+
 
 	LCD_HD44780::clear();
 
@@ -205,8 +207,8 @@ void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny k¹t
 			//LCD_HD44780::showNumber(SERV_MAX-current_angle);
 		//LCD_HD44780::showNumber(current_angle);
 		/* przeliczanie */
-		tikRemain=rot_serv+1;
-		for(int i = current_angle;i<tikRemain+current_angle;i++){
+		tikRemain+=rot_serv+1;
+		/*for(int i = current_angle;i<tikRemain+current_angle;i++){
 
 			OCR1A = i;
 			tikRemain--;
@@ -222,7 +224,16 @@ void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny k¹t
 				_delay_ms(200);
 			}
 			//LCD_HD44780::showNumber(tikRemain); //trouble shooting
-			//_delay_ms(5000);
+			//_delay_ms(5000);*/
+		while(tikRemain>0){
+			OCR1A+=step;
+			_delay_ms(200);
+			tikRemain--;
+			if(OCR1A == SERV_MAX)
+				step=-1;
+			if(OCR1A == SERV_MIN)
+				step=1;
+		}
 		angleOk = false;
 
 	}
