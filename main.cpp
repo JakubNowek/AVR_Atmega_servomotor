@@ -164,9 +164,6 @@ void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny k¹t
 	int pom = angle;
 	int rot_angle;
 	int rot_serv;
-	int current_angle;
-
-
 	LCD_HD44780::clear();
 
 	getKey(choice);
@@ -180,7 +177,6 @@ void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny k¹t
 			strncat(kat, &c, 1);	//dopisanie (cyfry) znaku do dotychczasowego łańcucha (liczby)
 		}
 		LCD_HD44780::showNumber(atoi(kat));
-
 	}
 	else{
 		angleOk = true;
@@ -188,12 +184,10 @@ void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny k¹t
 		memset( kat, 0, sizeof(kat) );
 		*choice = -1;
 		//angle = -1;
-
 	}
 
 	if(angleOk == true) //wartośc choice==11 oznacza, ze akceptujemy wybrany kat
 	{
-
 		LCD_HD44780::writeText("Rotating by: ");
 		LCD_HD44780::showNumber(rot_angle);
 		LCD_HD44780::goTo(0,1);
@@ -201,30 +195,9 @@ void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny k¹t
 
 		/*tutaj servo wchodzi*/
 		rot_serv = num_round( (SERV_MAX-SERV_MIN)*rot_angle/180.0); //kat obrotu w jednostkach serwomechanizmu
-
-		current_angle = OCR1A; //zapisanie obecnego polozenia
-			//LCD_HD44780::writeText("/");
-			//LCD_HD44780::showNumber(SERV_MAX-current_angle);
-		//LCD_HD44780::showNumber(current_angle);
 		/* przeliczanie */
 		tikRemain+=rot_serv;
-		/*for(int i = current_angle;i<tikRemain+current_angle;i++){
 
-			OCR1A = i;
-			tikRemain--;
-			_delay_ms(200);
-			if(OCR1A >=SERV_MAX){
-				//LCD_HD44780::showNumber(rot_serv+OCR1A);
-				//_delay_ms(5000);
-				break;}
-		}
-		current_angle = OCR1A;
-			for(tikRemain; tikRemain>0;tikRemain--){
-				OCR1A=OCR1A-1;
-				_delay_ms(200);
-			}
-			//LCD_HD44780::showNumber(tikRemain); //trouble shooting
-			//_delay_ms(5000);*/
 		while(tikRemain>0){
 			OCR1A+=step;
 			_delay_ms(200);
@@ -235,7 +208,6 @@ void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny k¹t
 				step=1;
 		}
 		angleOk = false;
-
 	}
 	_delay_ms(200);
 
