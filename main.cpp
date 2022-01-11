@@ -1,10 +1,37 @@
-/*
-v
+#include <avr/io.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <limits.h>
+#include <util/delay.h>
+#include "LCD_HD44780.h"
+#include <math.h>
+
+#define bit_is_set(sfr, bit) (_SFR_BYTE(sfr) & _BV(bit))
+#define bit_is_clear(sfr, bit) (!(_SFR_BYTE(sfr) & _BV(bit)))
+
+
+#define ILE_OPCJI 4
+
+#ifndef cbi
+#define cbi(reg, bit) reg &= ~(_BV(bit))
+#endif
+
+#ifndef sbi
+#define sbi(reg, bit) reg |= (_BV(bit))
+#endif
+
+
+#define SERV_MIN 31
+#define SERV_MAX 63
 
 bool do_Menu = true;
 bool angleOk = false;
+bool rotation = false;
 
-
+int num_round(float number) { //zaokrÄ…glanie floatÃ³w
+   return (int) (number < 0 ? number - 0.5 : number + 0.5);
+}
 
 void getKey(int *choice)
 {
@@ -86,6 +113,7 @@ void getKey(int *choice)
             if (i == 3) // nr 4 na klawiaturze
             {
                 //LCD_HD44780::writeText("-");
+
             }
         }
         else if (bit_is_set(PINC, 7))
@@ -117,10 +145,9 @@ void getKey(int *choice)
 
 void init_PWM()
 {
-	TCCR1A |= (1 << WGM10) | (1 << WGM11) | (1 << COM1A1); // TOP - 1023
-	TCCR1B |= (1 << WGM12) | (1 << CS12);				   // prescaler 256 bits
+	TCCR1A |= (1 << WGM10) | (1 << WGM11) | (1 << COM1A1);
+	TCCR1B |= (1 << WGM12) | (1 << CS12); //prescaler na 256 bitÃ³w
 }
-int low = 1023 * 0.061, high = 1023 * 0.125, middle = 65; // low -51 high -123
 
 void Bounce(){ //  "Odbijanie" serwa
 	LCD_HD44780::clear();
@@ -129,11 +156,13 @@ void Bounce(){ //  "Odbijanie" serwa
 	//LCD_HD44780::clear();
 }
 
-void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny k¹t
+void Rotate(int *choice, char *kat){ // ObrÃ³t serwa o dowolny kÂ¹t
 	char c;
 	int angle = -1;
 	int pom = angle;
 	int rot_angle;
+	int rot_serv;
+	int current_angle;
 	LCD_HD44780::clear();
 
 	getKey(choice);
@@ -143,30 +172,52 @@ void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny k¹t
 		LCD_HD44780::goTo(0,1);
 		angle=(*choice);
 		if(angle!=pom){
-			c = angle+'0';
-			strncat(kat, &c, 1);
+			c = angle+'0'; 		//zamiana liczby na char
+			strncat(kat, &c, 1);	//dopisanie (cyfry) znaku do dotychczasowego Å‚aÅ„cucha (liczby)
 		}
 		LCD_HD44780::showNumber(atoi(kat));
+
 	}
 	else{
 		angleOk = true;
 		rot_angle = atoi(kat);
+		memset( kat, 0, sizeof(kat) );
+		*choice = -1;
+		angle = -1;
+
 	}
 
-	if(angleOk == true) //wartoœc choice==11 oznacza, ¿e akceptujemy wybrany kat
+	if(angleOk == true) //wartoÅ›c choice==11 oznacza, ze akceptujemy wybrany kat
 	{
+
 		LCD_HD44780::writeText("Angle is: ");
 		LCD_HD44780::showNumber(rot_angle);
 		LCD_HD44780::goTo(0,1);
 		LCD_HD44780::writeText("Rotating...");
-		servo
+
+		/*tutaj servo wchodzi*/
+		rot_serv = num_round( (SERV_MAX-SERV_MIN)*rot_angle/180.0 );
+
+		current_angle = OCR1A; //zapisanie obecnego polozenia
+			//LCD_HD44780::writeText("/");
+			//LCD_HD44780::showNumber(SERV_MAX-current_angle);
+		//LCD_HD44780::showNumber(current_angle);
+		/* przeliczanie */
+		for(int i = current_angle;i<rot_serv+current_angle;i++){
+			OCR1A = i;
+			_delay_ms(200);
+		}
+		angleOk = false;
+
+
+
 
 	}
 	_delay_ms(200);
 }
 
-chyba wywalic
-void Spin(){ // Sta³e obracanie serwa
+/*chyba wywalic*/
+void Spin(){ // StaÂ³e obracanie serwa
 	LCD_HD44780::clear();
 	LCD_HD44780::writeText("You spin me");
 	LCD_HD44780::goTo(0,1);
@@ -174,8 +225,8 @@ void Spin(){ // Sta³e obracanie serwa
 	LCD_HD44780::writeText("Right round");
 }
 
-void Exit(){ // Wy³¹czenie serwa i ekranu
-	LCD_HD44780::writeCommand(HD44780_DISPLAY_ONOFF | HD44780_DISPLAY_OFF); // wy³¹czenie ekranu
+void Exit(){ // WyÂ³Â¹czenie serwa i ekranu
+	LCD_HD44780::writeCommand(HD44780_DISPLAY_ONOFF | HD44780_DISPLAY_OFF); // wyÂ³Â¹czenie ekranu
 }
 
 void Menu(int *choice,int *page ,char *opcje1[]){
@@ -197,10 +248,9 @@ void Menu(int *choice,int *page ,char *opcje1[]){
 	LCD_HD44780::writeText("MENU");
 	//LCD_HD44780::showNumber(*choice); // do debuggowania w razie problemow
 	LCD_HD44780::goTo(0,1);
-	LCD_HD44780::writeText(opcje1[*page]); //tu wypisywana jest aktualnie przegl¹dana opcja
+	LCD_HD44780::writeText(opcje1[*page]); //tu wypisywana jest aktualnie przeglÂ¹dana opcja
 
 	if(*choice == 5){
-		//do_Func = true;
 		do_Menu = false;
 	}
 
@@ -219,6 +269,11 @@ int main()
 
     DDRC = 0b00001111;
     PORTC = 0xff;
+
+    init_PWM();
+
+    OCR1A = SERV_MIN; //poczÄ…tkowo servo w pozycji 0
+    DDRD|=(1<<PD4)|(1<<PD5);   //Piny od PWM ustawiamy na wyjÅ›cia
     LCD_HD44780::init();
     while (1){
 
@@ -247,81 +302,3 @@ int main()
 
     }
 }
-
-
-
-*/
-
-
-
-#include <avr/io.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <limits.h>
-#include <util/delay.h>
-#include "LCD_HD44780.h"
-#include <math.h>
-
-#define bit_is_set(sfr, bit) (_SFR_BYTE(sfr) & _BV(bit))
-#define bit_is_clear(sfr, bit) (!(_SFR_BYTE(sfr) & _BV(bit)))
-
-
-#define ILE_OPCJI 4
-
-#ifndef cbi
-#define cbi(reg, bit) reg &= ~(_BV(bit))
-#endif
-
-#ifndef sbi
-#define sbi(reg, bit) reg |= (_BV(bit))
-#endif
-
-
-void init_PWM() // zadanie 1
-{
-	TCCR1A |= (1 << WGM10) | (1 << WGM11) | (1 << COM1A1);
-	TCCR1B |= (1 << WGM12) | (1 << CS12); //ustawienie prescalera na 256 bitow
-}
-
-
-
-/* void init_PWM() // zadanie 1
-{
-	TCCR1A |= (1 << WGM10) | (1 << WGM11) | (1 << COM1A1);
-	TCCR1B |= (1 << WGM12) | (1 << CS11) ; //ustawienie prescalera na 8 bitow
-}*/
-
-/* void init_PWM() // zadanie 1
-{
-	TCCR1A |= (1 << WGM10) | (1 << WGM11) | (1 << COM1A1);
-	TCCR1B |= (1 << WGM12) | (1 << CS11) | (1 << CS10); //ustawienie prescalera na 64 bitow
-}*/
-/*
-void init_PWM(){
-	TCCR1A |= (1 << WGM10) | (1 << COM1A1);
-	TCCR1B |= (1 << WGM12) | (1 << CS11); //ustawienie prescalera na 256 bitow
-}
-*/
-
-int main()
-{
-int min = 31;
-   init_PWM();
-   DDRD|=(1<<PD4)|(1<<PD5);   //PWM Pins as Output
-   //int i = 31 // wartosc minimalna;
-   //int i = 63;// wartosc max;
-   	  for(int i=min;i<64;i++)
-   	   {
-		 OCR1A=i;
-		  _delay_ms(200);
-		  if (i == 63){
-			  i=min;
-			  OCR1A=i;
-			  _delay_ms(1000);
-		  }
-   	   }
-}
-
-
-
