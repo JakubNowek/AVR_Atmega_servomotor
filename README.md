@@ -22,3 +22,7 @@ Gdy serwo obroci se o wybrany kat, mozemy ponownie zrzadac obrotu, ponownie
 podajac kat lub wrocic do MENU, przyciskiem RETURN.
 
 Gdy wybrana zostanie opcja 2, serwo wraca do pozycji 0, a wyswietlacz wylacza sie.
+
+Do symulacji obiektow uzyto programu simulIDE. 
+Plik projektu: PTM.simu
+Plik do wgrania do mikroprocesora: Debug>avr_PTM_ptojekt.elf
