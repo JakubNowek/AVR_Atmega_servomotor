@@ -153,8 +153,11 @@ void init_PWM()
 	TCCR1B |= (1 << WGM12) | (1 << CS12); //prescaler na 256 bitów
 }
 
-
-void Bounce(int *choice){ //  "Odbijanie" serwa
+/* funkcja realizujaca "odbijanie" serwa
+ * odbijanie moze zostac przerwane jesli zostanie wcisniety
+ * przycisk powrotu do MENU
+ */
+void Bounce(int *choice){
 	LCD_HD44780::clear();
 	LCD_HD44780::writeText("Bounce, bounce");
 	LCD_HD44780::goTo(0,1);
@@ -169,6 +172,12 @@ void Bounce(int *choice){ //  "Odbijanie" serwa
 	}
 	//LCD_HD44780::clear();
 }
+
+/* funkcja odpowiedzialna za obracanie serwa o podany przez uzytkownika kat.
+ * Kat musi byc dodatni. Serwo obraca sie w zakresie 0-180 stopni,
+ * wiec jesli podany kat przekroczy ten zakres, serwo odbije sie od gornej
+ * lub dolnej granicy i obroci w druga strone o wartosc kata jaka pozostala.
+ */
 
 void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny kat
 	char c; //zmienna potrzebna do konwersji int na char
@@ -194,7 +203,7 @@ void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny kat
 		else{
 			angleOk = true;
 			rot_angle = atoi(kat);
-			memset( kat, 0, sizeof(kat) );
+			memset( kat, 0, sizeof(kat) ); //wyzerowanie wartosci kata
 			*choice = -1;
 			//angle = -1;
 		}
@@ -239,7 +248,7 @@ void Exit(){ // Wylaczenie serwa i ekranu
 	OCR1A = SERV_MIN;
 }
 
-void Menu(int *choice,int *page ,char *opcje1[]){
+void Menu(int *choice,int *page ,char *opcje[]){
 
 	LCD_HD44780::clear();
 	getKey(choice); // jesli w menu wybieranie opcji(3 mozliwosci: pokaz nastepna opcje, pokaz poprzednia opcje, wybierz opcje)
@@ -255,9 +264,8 @@ void Menu(int *choice,int *page ,char *opcje1[]){
 	}
 
 	LCD_HD44780::writeText("MENU");
-	//LCD_HD44780::showNumber(*choice); // do debuggowania w razie problemow
 	LCD_HD44780::goTo(0,1);
-	LCD_HD44780::writeText(opcje1[*page]); //tu wypisywana jest aktualnie przegladana opcja
+	LCD_HD44780::writeText(opcje[*page]); //tu wypisywana jest aktualnie przegladana opcja
 
 	if(*choice == 5){
 		do_Menu = false;
@@ -279,8 +287,8 @@ int main()
     OCR1A = SERV_MIN; //początkowo servo w pozycji 0
     DDRD|=(1<<PD4)|(1<<PD5);   //Piny od PWM ustawiamy na wyjścia
     LCD_HD44780::init();
-    while (1){
 
+    while (1){
     	if(do_Menu == true)
     	Menu(&wybor,&strona,opcje1);
     	else{

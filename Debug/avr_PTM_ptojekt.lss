@@ -11,17 +11,17 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
   3 .stab         00001c14  00000000  00000000  00002c28  2**2
                   CONTENTS, READONLY, DEBUGGING
-  4 .stabstr      00000ddb  00000000  00000000  0000483c  2**0
+  4 .stabstr      00000dda  00000000  00000000  0000483c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_aranges 000001a0  00000000  00000000  00005617  2**0
+  5 .debug_aranges 000001a0  00000000  00000000  00005616  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_pubnames 000001f0  00000000  00000000  000057b7  2**0
+  6 .debug_pubnames 000001f0  00000000  00000000  000057b6  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_info   0000240c  00000000  00000000  000059a7  2**0
+  7 .debug_info   0000240c  00000000  00000000  000059a6  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_abbrev 00001377  00000000  00000000  00007db3  2**0
+  8 .debug_abbrev 00001377  00000000  00000000  00007db2  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_line   000011d8  00000000  00000000  0000912a  2**0
+  9 .debug_line   000011d8  00000000  00000000  00009129  2**0
                   CONTENTS, READONLY, DEBUGGING
  10 .debug_frame  000001c0  00000000  00000000  0000a304  2**2
                   CONTENTS, READONLY, DEBUGGING
@@ -3885,7 +3885,7 @@ void init_PWM()
 	OCR1A = SERV_MIN;
 }
 
-void Menu(int *choice,int *page ,char *opcje1[]){
+void Menu(int *choice,int *page ,char *opcje[]){
     1a3a:	df 93       	push	r29
     1a3c:	cf 93       	push	r28
     1a3e:	cd b7       	in	r28, 0x3d	; 61
@@ -3994,13 +3994,12 @@ void Menu(int *choice,int *page ,char *opcje1[]){
     1aee:	80 e0       	ldi	r24, 0x00	; 0
     1af0:	61 e0       	ldi	r22, 0x01	; 1
     1af2:	c9 da       	rcall	.-2670   	; 0x1086 <_ZN11LCD_HD447804goToEhh>
-	//LCD_HD44780::showNumber(*choice); // do debuggowania w razie problemow
 	LCD_HD44780::goTo(0,1);
     1af4:	e9 89       	ldd	r30, Y+17	; 0x11
     1af6:	fa 89       	ldd	r31, Y+18	; 0x12
     1af8:	80 81       	ld	r24, Z
     1afa:	91 81       	ldd	r25, Z+1	; 0x01
-	LCD_HD44780::writeText(opcje1[*page]); //tu wypisywana jest aktualnie przegladana opcja
+	LCD_HD44780::writeText(opcje[*page]); //tu wypisywana jest aktualnie przegladana opcja
     1afc:	9c 01       	movw	r18, r24
     1afe:	22 0f       	add	r18, r18
     1b00:	33 1f       	adc	r19, r19
@@ -4175,10 +4174,10 @@ _delay_ms(double __ms)
     1c18:	08 95       	ret
 
 00001c1a <_Z6RotatePiPc>:
-			step=1;
-	}
-	//LCD_HD44780::clear();
-}
+ * Kat musi byc dodatni. Serwo obraca sie w zakresie 0-180 stopni,
+ * wiec jesli podany kat przekroczy ten zakres, serwo odbije sie od gornej
+ * lub dolnej granicy i obroci w druga strone o wartosc kata jaka pozostala.
+ */
 
 void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny kat
     1c1a:	df 93       	push	r29
@@ -4310,7 +4309,7 @@ void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny kat
     1cec:	50 e0       	ldi	r21, 0x00	; 0
     1cee:	d9 d3       	rcall	.+1970   	; 0x24a2 <memset>
     1cf0:	ee a1       	ldd	r30, Y+38	; 0x26
-			memset( kat, 0, sizeof(kat) );
+			memset( kat, 0, sizeof(kat) ); //wyzerowanie wartosci kata
     1cf2:	ff a1       	ldd	r31, Y+39	; 0x27
     1cf4:	8f ef       	ldi	r24, 0xFF	; 255
     1cf6:	9f ef       	ldi	r25, 0xFF	; 255
@@ -4932,12 +4931,12 @@ _delay_ms(double __ms)
     2122:	08 95       	ret
 
 00002124 <_Z6BouncePi>:
-{
-	TCCR1A |= (1 << WGM10) | (1 << WGM11) | (1 << COM1A1);
-	TCCR1B |= (1 << WGM12) | (1 << CS12); //prescaler na 256 bitów
-}
 
-void Bounce(int *choice){ //  "Odbijanie" serwa
+/* funkcja realizujaca "odbijanie" serwa
+ * odbijanie moze zostac przerwane jesli zostanie wcisniety
+ * przycisk powrotu do MENU
+ */
+void Bounce(int *choice){
     2124:	df 93       	push	r29
     2126:	cf 93       	push	r28
     2128:	cd b7       	in	r28, 0x3d	; 61
@@ -5158,8 +5157,8 @@ _delay_ms(double __ms)
     22a0:	80 93 e9 01 	sts	0x01E9, r24
     22a4:	ef 85       	ldd	r30, Y+15	; 0x0f
     22a6:	f8 89       	ldd	r31, Y+16	; 0x10
-
-void Bounce(int *choice){ //  "Odbijanie" serwa
+ */
+void Bounce(int *choice){
 	LCD_HD44780::clear();
 	LCD_HD44780::writeText("Bounce, bounce");
 	LCD_HD44780::goTo(0,1);
@@ -5279,8 +5278,8 @@ int main()
     2356:	0e 94 51 09 	call	0x12a2	; 0x12a2 <_ZN11LCD_HD447804initEv>
     LCD_HD44780::init();
     235a:	80 91 e8 01 	lds	r24, 0x01E8
-    while (1){
 
+    while (1){
     	if(do_Menu == true)
     235e:	88 23       	and	r24, r24
     2360:	59 f0       	breq	.+22     	; 0x2378 <main+0xb0>

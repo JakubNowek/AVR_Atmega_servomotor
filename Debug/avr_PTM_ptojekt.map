@@ -548,9 +548,9 @@ LOAD e:/instalki/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
  .stab          0x00000c90      0xf84 ./main.o
                                 0xf90 (size before relaxing)
 
-.stabstr        0x00000000      0xddb
+.stabstr        0x00000000      0xdda
  *(.stabstr)
- .stabstr       0x00000000      0xddb ./LCD_HD44780.o
+ .stabstr       0x00000000      0xdda ./LCD_HD44780.o
 
 .stab.excl
  *(.stab.excl)
