@@ -29,8 +29,8 @@ bool do_Menu = true;
 bool angleOk = false;
 bool rotation = false;
 
-int tikRemain=0;
-int step = 1;
+int tikRemain=0; //ile krokow serwa zostalo do wynonania
+int step = 1; // kierunek obrotu (wartosc 1 lub -1 jest dodawana do OCR1A co powoduje obrot serwa)
 
 int num_round(float number) { //zaokrąglanie floatów
    return (int) (number < 0 ? number - 0.5 : number + 0.5);
@@ -65,7 +65,7 @@ void getKey(int *choice)
             if (i == 3) //EXIT function
             {
                 {
-                	*choice = -69;
+                	*choice = -69; //powrot do menu
                     //LCD_HD44780::writeText("/");
                 }
             }
@@ -153,6 +153,7 @@ void init_PWM()
 	TCCR1B |= (1 << WGM12) | (1 << CS12); //prescaler na 256 bitów
 }
 
+
 void Bounce(int *choice){ //  "Odbijanie" serwa
 	LCD_HD44780::clear();
 	LCD_HD44780::writeText("Bounce, bounce");
@@ -169,8 +170,8 @@ void Bounce(int *choice){ //  "Odbijanie" serwa
 	//LCD_HD44780::clear();
 }
 
-void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny k¹t
-	char c;
+void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny kat
+	char c; //zmienna potrzebna do konwersji int na char
 	int angle = -1;
 	int pom = angle;
 	int rot_angle;
@@ -269,8 +270,7 @@ int main()
 	int wybor=0, strona = 0; char kat[]="";
 	char *opcje1[]= {"0 - Motor Bounce ",
 					 "1 - Rotate ",
-					 "2 - Exit "
-	}; //tablica opcji
+					 "2 - Exit " }; //tablica opcji
 
     DDRC = 0b00001111;
     PORTC = 0xff;
@@ -303,10 +303,6 @@ int main()
     		    	break;
     		}
     	}
-    	//_delay_ms(200);
-    	//wybor = 0;
-    	//kat = 0;
     	wybor = -1;
-
     }
 }

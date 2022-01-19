@@ -3348,8 +3348,8 @@ _delay_ms(double __ms)
 0000171a <_Z9num_roundf>:
 bool rotation = false;
 
-int tikRemain=0;
-int step = 1;
+int tikRemain=0; //ile krokow serwa zostalo do wynonania
+int step = 1; // kierunek obrotu (wartosc 1 lub -1 jest dodawana do OCR1A co powoduje obrot serwa)
 
 int num_round(float number) { //zaokrąglanie floatów
     171a:	df 93       	push	r29
@@ -3558,7 +3558,7 @@ void getKey(int *choice)
     1874:	a8 c0       	rjmp	.+336    	; 0x19c6 <_Z6getKeyPi+0x21c>
             {
                 {
-                	*choice = -69;
+                	*choice = -69; //powrot do menu
     1876:	eb 81       	ldd	r30, Y+3	; 0x03
     1878:	fc 81       	ldd	r31, Y+4	; 0x04
     187a:	8b eb       	ldi	r24, 0xBB	; 187
@@ -4180,7 +4180,7 @@ _delay_ms(double __ms)
 	//LCD_HD44780::clear();
 }
 
-void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny k¹t
+void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny kat
     1c1a:	df 93       	push	r29
     1c1c:	cf 93       	push	r28
     1c1e:	cd b7       	in	r28, 0x3d	; 61
@@ -4195,7 +4195,7 @@ void Rotate(int *choice, char *kat){ // Obrót serwa o dowolny k¹t
     1c30:	8e a3       	std	Y+38, r24	; 0x26
     1c32:	79 a7       	std	Y+41, r23	; 0x29
     1c34:	68 a7       	std	Y+40, r22	; 0x28
-	char c;
+	char c; //zmienna potrzebna do konwersji int na char
 	int angle = -1;
     1c36:	8f ef       	ldi	r24, 0xFF	; 255
     1c38:	9f ef       	ldi	r25, 0xFF	; 255
@@ -5214,8 +5214,7 @@ int main()
     22e8:	8d 83       	std	Y+5, r24	; 0x05
 	char *opcje1[]= {"0 - Motor Bounce ",
 					 "1 - Rotate ",
-					 "2 - Exit "
-	}; //tablica opcji
+					 "2 - Exit " }; //tablica opcji
     22ea:	ce 01       	movw	r24, r28
     22ec:	06 96       	adiw	r24, 0x06	; 6
     22ee:	9f 87       	std	Y+15, r25	; 0x0f
@@ -5366,10 +5365,10 @@ int main()
     		    	return 0;
     23e4:	de bf       	out	0x3e, r29	; 62
     23e6:	0f be       	out	0x3f, r0	; 63
-    	//wybor = 0;
-    	//kat = 0;
+    		    	break;
+    		}
+    	}
     	wybor = -1;
-
     }
 }
     23e8:	cd bf       	out	0x3d, r28	; 61
@@ -5383,11 +5382,11 @@ int main()
     23f8:	b0 cf       	rjmp	.-160    	; 0x235a <main+0x92>
 
 000023fa <__prologue_saves__>:
+    		        break;
+    		    default:
+    		    	break;
     		}
     	}
-    	//_delay_ms(200);
-    	//wybor = 0;
-    	//kat = 0;
     	wybor = -1;
     23fa:	2f 92       	push	r2
     23fc:	3f 92       	push	r3
